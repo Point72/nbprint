@@ -3,12 +3,14 @@ from typing import TYPE_CHECKING, Tuple
 from nbformat import NotebookNode
 from pydantic import Field, field_validator
 
-from .base import BaseModel, Role, _append_or_extend
-from .common import PageOrientation, PageSize, Style
-from .exceptions import NBPrintNullCellError
+from nbprint.config.base import BaseModel, Role, _append_or_extend
+from nbprint.config.common import PageOrientation, PageSize, Style
+from nbprint.config.exceptions import NBPrintNullCellError
+
+from .content import Section
 
 if TYPE_CHECKING:
-    from .core.config import Configuration
+    from .config import Configuration
 
 __all__ = (
     "Page",
@@ -89,7 +91,7 @@ class Page(BaseModel):
     size: PageSize | Tuple[float, float] | None = Field(default=PageSize.letter)
     orientation: PageOrientation | None = Field(default=PageOrientation.portrait)
 
-    pages: list["Page"] | None = Field(default_factory=list)
+    pages: dict[Section, "Page"] | None = Field(default_factory=dict)
 
     css: str = ""
 
